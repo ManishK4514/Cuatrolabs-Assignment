@@ -1,7 +1,5 @@
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-
 CREATE TABLE partners (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     name TEXT NOT NULL,
     city TEXT NOT NULL,
     is_active BOOLEAN NOT NULL DEFAULT true,
@@ -9,8 +7,8 @@ CREATE TABLE partners (
 );
 
 CREATE TABLE partner_slots (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    partner_id UUID NOT NULL REFERENCES partners(id),
+    id SERIAL PRIMARY KEY,
+    partner_id INTEGER NOT NULL REFERENCES partners(id),
     slot_start TIMESTAMPTZ NOT NULL,
     slot_end TIMESTAMPTZ NOT NULL,
     status TEXT NOT NULL DEFAULT 'available' CHECK (status IN ('available', 'booked', 'blocked')),
@@ -18,18 +16,18 @@ CREATE TABLE partner_slots (
 );
 
 CREATE TABLE bookings (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    partner_id UUID NOT NULL REFERENCES partners(id),
-    slot_id UUID NOT NULL REFERENCES partner_slots(id),
-    customer_id UUID NOT NULL,
+    id SERIAL PRIMARY KEY,
+    partner_id INTEGER NOT NULL REFERENCES partners(id),
+    slot_id INTEGER NOT NULL REFERENCES partner_slots(id),
+    customer_id INTEGER NOT NULL,
     status TEXT NOT NULL DEFAULT 'pending' CHECK (status IN ('pending', 'confirmed', 'cancelled')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
     UNIQUE (slot_id)
 );
 
 CREATE TABLE payments (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    booking_id UUID NOT NULL REFERENCES bookings(id),
+    id SERIAL PRIMARY KEY,
+    booking_id INTEGER NOT NULL REFERENCES bookings(id),
     provider TEXT NOT NULL,
     provider_txn_id TEXT NOT NULL,
     amount_paise BIGINT NOT NULL,
@@ -42,7 +40,7 @@ CREATE TABLE payments (
 );
 
 CREATE TABLE webhook_events (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+    id SERIAL PRIMARY KEY,
     event_id TEXT NOT NULL UNIQUE,
     provider TEXT NOT NULL,
     event_type TEXT NOT NULL,
@@ -54,9 +52,9 @@ CREATE TABLE webhook_events (
 );
 
 CREATE TABLE refunds (
-    id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
-    booking_id UUID NOT NULL REFERENCES bookings(id),
-    payment_id UUID REFERENCES payments(id),
+    id SERIAL PRIMARY KEY,
+    booking_id INTEGER NOT NULL REFERENCES bookings(id),
+    payment_id INTEGER REFERENCES payments(id),
     amount_paise BIGINT NOT NULL,
     refund_type TEXT NOT NULL CHECK (refund_type IN ('full', 'partial', 'none')),
     reason TEXT,
