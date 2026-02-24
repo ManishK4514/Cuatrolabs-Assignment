@@ -1,0 +1,30 @@
+{
+  "name": "cuatro-labs-assessment",
+  "version": "1.0.0",
+  "description": "Slot-based booking service connecting customers with service partners. Handles partner assignment, concurrent slot booking, payment webhooks (Razorpay), and cancellations with tiered refunds.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ManishK4514/Cuatrolabs-Assignment.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/ManishK4514/Cuatrolabs-Assignment/issues"
+  },
+  "homepage": "https://github.com/ManishK4514/Cuatrolabs-Assignment#readme",
+  "dependencies": {
+    "dotenv": "^17.3.1",
+    "express": "^5.2.1",
+    "pg": "^8.18.0",
+    "razorpay": "^2.9.6"
+  }
+}
