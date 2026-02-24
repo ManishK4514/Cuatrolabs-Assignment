@@ -11,16 +11,16 @@ async function assignBestPartner(city, slotStart = null) {
   const { rows } = await pool.query(
     `SELECT p.id AS partner_id, p.name, COALESCE(w.active_workload, 0)::int AS active_workload
      FROM partners p
-     WHERE p.city = $1 AND p.is_active = true
-       AND EXISTS (
-         SELECT 1 FROM partner_slots ps
-         WHERE ps.partner_id = p.id AND ps.status = 'available' AND ${slotFilter}
-       )
      LEFT JOIN LATERAL (
        SELECT COUNT(*) AS active_workload
        FROM bookings b
        WHERE b.partner_id = p.id AND b.status IN ('pending', 'confirmed')
      ) w ON true
+     WHERE p.city = $1 AND p.is_active = true
+       AND EXISTS (
+         SELECT 1 FROM partner_slots ps
+         WHERE ps.partner_id = p.id AND ps.status = 'available' AND ${slotFilter}
+       )
      ORDER BY active_workload ASC, p.created_at ASC, p.name ASC
      LIMIT 1`,
     params

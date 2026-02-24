@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const bookingsRouter = require('./routes/bookings');
 const partnersRouter = require('./routes/partners');
